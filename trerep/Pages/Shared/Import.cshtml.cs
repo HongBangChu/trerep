@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.DependencyInjection;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -125,5 +126,11 @@ namespace trerep.Pages.Shared
             memory.Position = 0;
             return File(memory, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);
         }
+
+        //public void ConfigureServices(IServiceCollection services)
+        //{
+        //    services.AddMvc();
+        //    services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+        //}
     }
 }
