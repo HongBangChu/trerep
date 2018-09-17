@@ -35,3 +35,8 @@ body {
         display: none;
     }
 }
+
+.jexcel td{
+    font-size: 13px;
+    color: #222;
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - trerep</title>
+    <title>@ViewData["Title"] - Treasury Report</title>
 
     <environment include="Development">
         <!-- Font Awesome -->
@@ -11,14 +11,18 @@
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <!-- Material Design Bootstrap -->
         <link href="~/lib/mdb/css/mdb.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <link href="~/lib/jexcel/jquery.jexcel.css" rel="stylesheet">
+    <script src="~/lib/jexcel/jquery.jexcel.js"></script>
+    <link href="~/lib/jcalendar/jquery.jcalendar.css" rel="stylesheet">
+    <script src="~/lib/jcalendar/jquery.jcalendar.js"></script>
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
