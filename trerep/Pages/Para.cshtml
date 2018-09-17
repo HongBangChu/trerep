@@ -1,0 +1,113 @@
+﻿@page
+@model trerep.Pages.ParaModel
+@{
+    ViewData["Title"] = "Para";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<!-- tabs -->
+<div class="tabbable tabs-bottom">
+    <div class="tab-content">
+        <div class="tab-pane active" id="cust">
+            <div class="jumbotron">
+                <div class="jexcel-wrapper">
+                    <p>These lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.hese lists are meant to identify articles which deserve editor attention because they are the most important for s.</p>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="about">
+            <div class="jumbotron">
+                <h1>About Tab</h1>
+                <p>because they are the most important for an encyclopedia to have, as determined by the community of participating editors..</p>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="services">
+            <div class="jumbotron">
+                <h1>Services Tab</h1>
+                <p>meant to identify articles which deserve editor attention because they are the most important for an encyclopedia to have.</p>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="contact">
+            <div class="jumbotron">
+                <h1>Contact Tab</h1>
+                <p>deserve editor attention because they are the most important for an encyclopedia to have, as determined by the community of participating editors..</p>
+            </div>
+        </div>
+    </div>
+    <!-- tab content -->
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#cust" data-toggle="tab">Customer</a></li>
+        <li><a href="#about" data-toggle="tab">About</a></li>
+        <li><a href="#services" data-toggle="tab">Services</a></li>
+        <li><a href="#contact" data-toggle="tab">Contact</a></li>
+    </ul>
+
+</div>
+<!-- /tabs -->
+<style type="text/css">
+    /* custom inclusion of right, left and below tabs */
+    .container .jumbotron{
+        padding: 0;
+    }
+    .jexcel-wrapper{
+        height: 510px;
+        overflow: auto;
+    }
+    .tabs-below > .nav-tabs {
+        border-bottom: 0;
+    }
+
+    .tab-content > .tab-pane,
+    .pill-content > .pill-pane {
+        display: none;
+    }
+    .jumbotron {
+        height: 515px;
+    }
+
+    .tab-content > .active,
+    .pill-content > .active {
+        display: block;
+    }
+    .tabs-bottom{
+        margin-top: 10px;
+    }
+    .tabs-bottom > .nav-tabs {
+        border: 1px solid #ddd;
+        padding-bottom: 2px;
+        background: #f9f9f9;
+        margin-top: -35px;
+        margin-left: -1px;
+        margin-right: -1px;
+        -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        padding-left: 20px;
+    }
+
+        .tabs-bottom > .nav-tabs > li {
+            margin-top: -1px;
+            margin-bottom: 0;
+        }
+
+            .tabs-bottom > .nav-tabs > li > a {
+                -webkit-border-radius: 0 0 4px 4px;
+                -moz-border-radius: 0 0 4px 4px;
+                border-radius: 0 0 4px 4px;
+            }
+
+    .tabs-below > .nav-tabs > li > a:hover,
+    .tabs-below > .nav-tabs > li > a:focus {
+        border-top-color: #ddd;
+        border-bottom-color: transparent;
+    }
+
+    .tabs-bottom > .nav-tabs > .active > a,
+    .tabs-bottom > .nav-tabs > .active > a:hover,
+    .tabs-bottom > .nav-tabs > .active > a:focus {
+        border-color: transparent #ddd #ddd #ddd;
+    }
+</style>

@@ -6,7 +6,11 @@
     <title>@ViewData["Title"] - trerep</title>
 
     <environment include="Development">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <!-- Material Design Bootstrap -->
+        <link href="~/lib/mdb/css/mdb.min.css" rel="stylesheet">
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
@@ -31,8 +35,9 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-page="/Index">Home</a></li>
-                    <li><a asp-page="/About">About</a></li>
-                    <li><a asp-page="/Contact">Contact</a></li>
+                    <li><a asp-page="/Para">Para</a></li>
+                    <li><a asp-page="/Data">Data</a></li>
+                    <li><a asp-page="/Report">Report</a></li>
                 </ul>
             </div>
         </div>
@@ -42,10 +47,10 @@
 
     <div class="container body-content">
         @RenderBody()
-        <hr />
+        @*<hr />
         <footer>
             <p>&copy; 2018 - trerep</p>
-        </footer>
+        </footer>*@
     </div>
 
     <environment include="Development">
