@@ -15,23 +15,31 @@
 
                     <script>
 data = [
-    [3, 'Classe A', 'Cheese', 1, '2017-01-12'],
-    [1, 'Classe B', 'Apples', 1, '2017-01-12'],
-    [2, 'Classe A', 'Carrots', 1, '2017-01-12'],
-    [1, 'Classe C', 'Oranges', 0, '2017-01-12'],
+    { a: 3, b: 'Classe A'},
+    { a: 1, b: 'Classe B'}
 ];
 
 $('#my').jexcel({
     data:data,
-    colHeaders:  [ 'CIF', 'Phân khúc khách hàng', 'Type', 'Stock', 'Next purchase' ],
-    colWidths: [ 300, 80, 100, 60, 120 ],
+    colHeaders:  [ 'CIF', 'Phân khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH' ],
+    colWidths: [ 80, 80, 80, 150, 80, 80, 120, 150, 120, 80, 80, 80, 100 ],
     columns: [
         //{ type: 'autocomplete', url:'/jexcel/countries' },
+        //{ type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
+        //{ type: 'checkbox' },
+        //{ type: 'calendar' },
         { type: 'text' },
         { type: 'text' },
-        { type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
-        { type: 'checkbox' },
-        { type: 'calendar' },
+        { type: 'text' },
+        { type: 'text' },
+        { type: 'text' },
+        { type: 'text' },
+        { type: 'text' },
+        { type: 'text' },
+        { type: 'text' },
+        { type: 'text' },
+        { type: 'text' },
+        { type: 'text' },
     ]
 });
                     </script>
