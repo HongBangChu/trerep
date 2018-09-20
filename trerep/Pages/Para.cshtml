@@ -4,49 +4,14 @@
     ViewData["Title"] = "Para";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-
+@ViewData["connStr"]
 <!-- tabs -->
 <div class="tabbable tabs-bottom">
     <div class="tab-content">
         <div class="tab-pane active" id="cust">
             <div class="jumbotron">
                 <div class="jexcel-wrapper">
-                    <div id="my"></div>
-
-                    <script>
-data = [
-    { a: 3, b: 'Classe A'},
-    { a: 1, b: 'Classe B'}
-];
-
-$('#my').jexcel({
-    data: data,
-    colHeaders:  [ 'CIF', 'Phân khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH' ],
-    colWidths: [ 80, 80, 80, 150, 80, 80, 120, 150, 120, 80, 80, 80, 100 ],
-    columns: [
-        //{ type: 'autocomplete', url:'/jexcel/countries' },
-        //{ type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
-        //{ type: 'checkbox' },
-        //{ type: 'calendar' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-        { type: 'text' },
-    ]
-                        });
-                        $('#save-cust').on('click', function () {
-                            alert(0);
-                            console.log($('#my').jexcel('getData', false));
-                        });
-                    </script>
+                    <div id="cust-sheet"></div>
                 </div>
             </div>
         </div>
@@ -93,109 +58,36 @@ $('#my').jexcel({
 
 </div>
 <!-- /tabs -->
-<style type="text/css">
-    /* custom inclusion of right, left and below tabs */
-    .container .jumbotron{
-        padding: 0;
-    }
-    .jexcel-wrapper{
-        height: 510px;
-        overflow: auto;
-    }
-    .tabs-below > .nav-tabs {
-        border-bottom: 0;
-    }
+<script>
+    data = [
+        { a: 3, b: 'Classe A' },
+        { a: 1, b: 'Classe B' }
+    ];
 
-    .tab-content > .tab-pane,
-    .pill-content > .pill-pane {
-        display: none;
-    }
-    .jumbotron {
-        height: 515px;
-    }
-
-    .tab-content > .active,
-    .pill-content > .active {
-        display: block;
-    }
-    .tabs-bottom{
-        margin-top: 10px;
-    }
-    .tabs-bottom > .nav-tabs {
-        border: 1px solid #ddd;
-        padding-bottom: 2px;
-        background: #f9f9f9;
-        margin-top: -35px;
-        margin-left: -1px;
-        margin-right: -1px;
-        /*-webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
-        box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);*/
-        border-bottom-left-radius: 6px;
-        border-bottom-right-radius: 6px;
-        padding-left: 20px;
-    }
-
-        .tabs-bottom > .nav-tabs > li {
-            margin-top: -1px;
-            margin-bottom: 0;
-        }
-
-            .tabs-bottom > .nav-tabs > li > a {
-                -webkit-border-radius: 0 0 4px 4px;
-                -moz-border-radius: 0 0 4px 4px;
-                border-radius: 0 0 4px 4px;
-            }
-
-    .tabs-below > .nav-tabs > li > a:hover,
-    .tabs-below > .nav-tabs > li > a:focus {
-        border-top-color: #ddd;
-        border-bottom-color: transparent;
-    }
-
-    .tabs-bottom > .nav-tabs > .active > a,
-    .tabs-bottom > .nav-tabs > .active > a:hover,
-    .tabs-bottom > .nav-tabs > .active > a:focus {
-        border-color: transparent #ddd #ddd #ddd;
-        color: tomato;
-    }
-    /*dropup menu hover*/
-    /* The container <div> - needed to position the dropup content */
-    .dropup {
-        position: relative;
-        display: inline-block;
-    }
-
-    /* Dropup content (Hidden by Default) */
-    .dropup-content {
-        display: none;
-        position: absolute;
-        bottom: 40px;
-        background-color: #fff;
-        min-width: 160px;
-        box-shadow: 0px -4px 4px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
-
-        /* Links inside the dropup */
-        .dropup-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-            /* Change color of dropup links on hover */
-            .dropup-content a:hover {
-                background-color: #f1f1f1;
-            }
-
-    /* Show the dropup menu on hover */
-    .active.dropup:hover .dropup-content {
-        display: block;
-    }
-
-    /* Change the background color of the dropup button when the dropup content is shown */
-    .dropup:hover .dropbtn {
-        background-color: #fff;
-    }
-</style>
+    $('#cust-sheet').jexcel({
+        data: data,
+        colHeaders: ['CIF', 'Phân khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH'],
+        colWidths: [80, 80, 80, 150, 80, 80, 120, 150, 120, 80, 80, 80, 100],
+        columns: [
+            //{ type: 'autocomplete', url:'/jexcel/countries' },
+            //{ type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
+            //{ type: 'checkbox' },
+            //{ type: 'calendar' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+            { type: 'text' },
+        ]
+    });
+    $('#save-cust').on('click', function () {
+        console.log($('#cust-sheet').jexcel('getData', false));
+    });
+</script>
