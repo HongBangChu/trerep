@@ -4,6 +4,7 @@
     ViewData["Title"] = "Para";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+@Html.AntiForgeryToken()
 @ViewData["connStr"]
 <!-- tabs -->
 <div class="tabbable tabs-bottom">
@@ -88,6 +89,23 @@
         ]
     });
     $('#save-cust').on('click', function () {
-        console.log($('#cust-sheet').jexcel('getData', false));
+        var custData = $('#cust-sheet').jexcel('getData', false);
+        console.log(custData);
+        $.ajax({
+            type: "POST",
+            url: "/Para?handler=CustBatchUpsert",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: JSON.stringify(custData),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
     });
 </script>

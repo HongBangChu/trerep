@@ -1,4 +1,4 @@
-﻿create or replace function para.batch_upsert_cust(
+﻿create or replace function para.cust_batch_upsert(
     p_jsonstr json,
     o_norows out integer)
 as $$
