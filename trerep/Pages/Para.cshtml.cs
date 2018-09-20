@@ -48,13 +48,14 @@ namespace trerep.Pages
             using (var conn = new NpgsqlConnection(_connStr))
             {
                 conn.Open();
-                using (var cmd = new NpgsqlCommand("cust_batch_upsert", conn))
+                using (var cmd = new NpgsqlCommand("para.cust_batch_upsert", conn))
                 {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("p_json", NpgsqlTypes.NpgsqlDbType.Json, batchData);
-                    cmd.Parameters.Add(new NpgsqlParameter("o_norows", NpgsqlTypes.NpgsqlDbType.Integer) { Direction = ParameterDirection.Output });
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@p_json", NpgsqlTypes.NpgsqlDbType.Json, batchData);
+                    NpgsqlParameter outParam = new NpgsqlParameter("@o_norows", NpgsqlTypes.NpgsqlDbType.Integer) { Direction = ParameterDirection.Output };
+                    cmd.Parameters.Add(outParam);
                     cmd.ExecuteNonQuery();
-                    return new JsonResult(cmd.Parameters[1].Value);
+                    return new JsonResult(outParam.Value);
                 }
             }
         }
