@@ -77,6 +77,23 @@ namespace trerep.Pages
             }
         }
 
+        public JsonResult OnDeleteCust(int cif)
+        {
+            using (var conn = new NpgsqlConnection(_connStr))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("para.cust_delete", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, "{\"cif\":"+cif+"}");
+                    NpgsqlParameter outParam = new NpgsqlParameter("@o_json", NpgsqlTypes.NpgsqlDbType.Json) { Direction = ParameterDirection.Output };
+                    cmd.Parameters.Add(outParam);
+                    cmd.ExecuteNonQuery();
+                    return new JsonResult(outParam.Value);
+                }
+            }
+        }
+
         //private string GetDocumentContents(HttpRequest Request)
         //{
         //    string documentContents;

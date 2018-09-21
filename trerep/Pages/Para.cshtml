@@ -59,6 +59,24 @@
 </div>
 <!-- /tabs -->
 <script>
+    var deleteRow = function (instance) {
+        $.ajax({
+            type: 'DELETE',
+            url: "/Para?handler=Cust&cif=" + $(instance).data('cif'),
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            success: function (response) {
+                alert(response);
+            }
+        });
+    }
+    var selectionActive = function (instance, firstColumn, lastColumn) {
+        // because sheet focus on to A1 before delete then blur after delete
+        if ($(firstColumn).prop('id') != $(lastColumn).prop('id'))
+            $(instance).data('cif', $(firstColumn).text());
+    }
+    
     function initCustSheet() {
         $.ajax({
             type: 'GET',
@@ -72,6 +90,8 @@
             success: function (response) {
                 $('#cust-sheet').jexcel({
                     data: response,
+                    ondeleterow: deleteRow,
+                    onselection: selectionActive,
                     colHeaders: ['CIF', 'Phân khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH'],
                     colWidths: [80, 80, 80, 300, 80, 80, 120, 250, 120, 80, 80, 80, 200],
                     columns: [
