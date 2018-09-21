@@ -47,7 +47,7 @@ body {
 }
 
 .jexcel-wrapper {
-    height: 510px;
+    /*height: 5010px;*/
     overflow: auto;
 }
 
@@ -61,7 +61,7 @@ body {
 }
 
 .jumbotron {
-    height: 515px;
+    /*height: 5015px;*/
 }
 
 .tab-content > .active,
@@ -82,9 +82,13 @@ body {
         margin-right: -1px;
         /*-webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
         box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);*/
-        border-bottom-left-radius: 6px;
-        border-bottom-right-radius: 6px;
+        /*border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;*/
         padding-left: 20px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 
         .tabs-bottom > .nav-tabs > li {
@@ -149,4 +153,9 @@ body {
 /* Change the background color of the dropup button when the dropup content is shown */
 .dropup:hover .dropbtn {
     background-color: #fff;
+}
+
+.tabs-bottom .jumbotron{
+    box-shadow: none;
+    -webkit-box-shadow: none;
 }
