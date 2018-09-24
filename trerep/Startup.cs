@@ -33,7 +33,6 @@ namespace trerep
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            //var connection = Configuration.GetConnectionString("PostgresConnection");
             // ignore 40x error
             services.AddMvc().AddRazorPagesOptions(o =>
             {
