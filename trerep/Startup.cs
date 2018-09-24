@@ -34,6 +34,11 @@ namespace trerep
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //var connection = Configuration.GetConnectionString("PostgresConnection");
+            // ignore 40x error
+            services.AddMvc().AddRazorPagesOptions(o =>
+            {
+                o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

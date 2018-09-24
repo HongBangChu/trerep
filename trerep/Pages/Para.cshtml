@@ -5,6 +5,13 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 @Html.AntiForgeryToken()
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Model.HttpContext).RequestToken;
+    }
+}
 <!-- tabs -->
 <div class="tabbable tabs-bottom">
     <div class="tab-content">
@@ -63,9 +70,9 @@
         $.ajax({
             type: 'DELETE',
             url: "/Para?handler=Cust&cif=" + $(instance).data('cif'),
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
-            },
+            //beforeSend: function (xhr) {
+            //    xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
+            //},
             success: function (response) {
                 alert(response);
             }
@@ -76,14 +83,14 @@
         if ($(firstColumn).prop('id') != $(lastColumn).prop('id'))
             $(instance).data('cif', $(firstColumn).text());
     }
-    
+
     function initCustSheet() {
         $.ajax({
             type: 'GET',
             url: "/Para?handler=Cust",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
-            },
+            //beforeSend: function (xhr) {
+            //    xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
+            //},
             //data: JSON.stringify(null),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -132,9 +139,14 @@
         $.ajax({
             type: "POST",
             url: "/Para?handler=CustBatchUpsert",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
-            },
+            //beforeSend: function (xhr) {
+            //    //xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
+            //    xhr.setRequestHeader("XSRF-TOKEN", $('input:hidden[name="__RequestVerificationToken"]').val());
+            //},
+            @*headers:
+{
+    "RequestVerificationToken": '@GetAntiXsrfRequestToken()'
+},*@
             data: JSON.stringify(custData),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
@@ -148,7 +160,7 @@
     });
 </script>
 <style type="text/css">
-    .body-content{
+    .body-content {
         width: 100%;
     }
 </style>

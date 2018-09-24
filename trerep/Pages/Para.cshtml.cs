@@ -38,6 +38,7 @@ namespace trerep.Pages
             //    }
             //}
         }
+        [ValidateAntiForgeryToken]
         public JsonResult OnPostCustBatchUpsert()
         {
             string batchData;
