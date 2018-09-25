@@ -85,50 +85,35 @@
     }
 
     function initCustSheet() {
-        $.ajax({
-            type: 'GET',
+        $('#cust-sheet').jexcel({
             url: "/Para?handler=Cust",
-            //beforeSend: function (xhr) {
-            //    xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
-            //},
-            //data: JSON.stringify(null),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                $('#cust-sheet').jexcel({
-                    data: response,
-                    ondeleterow: deleteRow,
-                    onselection: selectionActive,
-                    colHeaders: ['CIF', 'Phân khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH'],
-                    colWidths: [80, 80, 80, 300, 80, 80, 120, 250, 120, 80, 80, 80, 200],
-                    columns: [
-                        //{ type: 'autocomplete', url:'/jexcel/countries' },
-                        //{ type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
-                        //{ type: 'checkbox' },
-                        //{ type: 'calendar' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                    ]
-                });
-            },
-            failure: function (response) {
-                alert(response);
-            }
-        })
-        //data = [
-        //    { a: 3, b: 'Classe A' },
-        //    { a: 1, b: 'Classe B' }
-        //];
+            csvHeaders: true,
+            tableOverflow: true,
+            tableHeight: '460px',
+            //data: response,
+            ondeleterow: deleteRow,
+            onselection: selectionActive,
+            colHeaders: ['CIF', 'Phân khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH'],
+            colWidths: [80, 80, 80, 300, 80, 80, 120, 250, 120, 80, 80, 80, 200],
+            columns: [
+                //{ type: 'autocomplete', url:'/jexcel/countries' },
+                //{ type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
+                //{ type: 'checkbox' },
+                //{ type: 'calendar' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+            ]
+        });
     }
     $(function () {
         initCustSheet();
