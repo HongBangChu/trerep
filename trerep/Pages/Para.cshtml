@@ -4,14 +4,7 @@
     ViewData["Title"] = "Para";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-@Html.AntiForgeryToken()
-@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
-@functions{
-    public string GetAntiXsrfRequestToken()
-    {
-        return Xsrf.GetAndStoreTokens(Model.HttpContext).RequestToken;
-    }
-}
+<link href="~/css/worksheet.css" rel="stylesheet" />
 <!-- tabs -->
 <div class="tabbable tabs-bottom">
     <div class="tab-content">
@@ -61,6 +54,7 @@
         </li>
         <li><a href="#services" data-toggle="tab">Services</a></li>
         <li><a href="#contact" data-toggle="tab">Contact</a></li>
+        <li id="pager"></li>
     </ul>
 
 </div>
@@ -143,9 +137,23 @@
             }
         });
     });
+
+    $('.tabs-bottom #pager').bootpag({
+        total: 50,
+        page: 1,
+        maxVisible: 10,
+        leaps: true,
+        firstLastUse: true,
+        first: '←',
+        last: '→',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function (event, num) {
+        $(".content4").html("Page " + num); // or some ajax content loading...
+    });
 </script>
-<style type="text/css">
-    .body-content {
-        width: 100%;
-    }
-</style>

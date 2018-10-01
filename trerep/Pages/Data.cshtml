@@ -4,3 +4,140 @@
     ViewData["Title"] = "Data";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+<!-- tabs -->
+<div class="tabbable tabs-bottom">
+    <div class="tab-content">
+        <div class="tab-pane active" id="cust">
+            <div class="jumbotron">
+                <div class="jexcel-wrapper">
+                    <div id="cust-sheet"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="about">
+            <div class="jumbotron">
+                <h1>About Tab</h1>
+                <p>because they are the most important for an encyclopedia to have, as determined by the community of participating editors..</p>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="services">
+            <div class="jumbotron">
+                <h1>Services Tab</h1>
+                <p>meant to identify articles which deserve editor attention because they are the most important for an encyclopedia to have.</p>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="contact">
+            <div class="jumbotron">
+                <h1>Contact Tab</h1>
+                <p>deserve editor attention because they are the most important for an encyclopedia to have, as determined by the community of participating editors..</p>
+            </div>
+        </div>
+    </div>
+    <!-- tab content -->
+    <ul class="nav nav-tabs">
+        <li class="active dropup">
+            <a href="#cust" data-toggle="tab" class="dropbtn">Customer</a>
+            <div class="dropup-content">
+                <a id="save-cust" href="#">Save</a>
+            </div>
+        </li>
+        <li class="dropup">
+            <a class="dropbtn">Dropup</a>
+            <div class="dropup-content">
+                <a href="#">Link 1</a>
+                <a href="#">Link 2</a>
+                <a href="#">Link 3</a>
+            </div>
+        </li>
+        <li><a href="#services" data-toggle="tab">Services</a></li>
+        <li><a href="#contact" data-toggle="tab">Contact</a></li>
+    </ul>
+
+</div>
+<!-- /tabs -->
+<script>
+    var deleteRow = function (instance) {
+        $.ajax({
+            type: 'DELETE',
+            url: "/Para?handler=Cust&cif=" + $(instance).data('cif'),
+            //beforeSend: function (xhr) {
+            //    xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
+            //},
+            success: function (response) {
+                alert(response);
+            }
+        });
+    }
+    var selectionActive = function (instance, firstColumn, lastColumn) {
+        // because sheet focus on to A1 before delete then blur after delete
+        if ($(firstColumn).prop('id') != $(lastColumn).prop('id'))
+            $(instance).data('cif', $(firstColumn).text());
+    }
+
+    function initCustSheet() {
+        $('#cust-sheet').jexcel({
+            url: "/Para?handler=Cust",
+            csvHeaders: true,
+            tableOverflow: true,
+            tableHeight: '460px',
+            //data: response,
+            ondeleterow: deleteRow,
+            onselection: selectionActive,
+            colHeaders: ['CIF', 'Phân khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH'],
+            colWidths: [80, 80, 80, 300, 80, 80, 120, 250, 120, 80, 80, 80, 200],
+            columns: [
+                //{ type: 'autocomplete', url:'/jexcel/countries' },
+                //{ type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
+                //{ type: 'checkbox' },
+                //{ type: 'calendar' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+                { type: 'text' },
+            ]
+        });
+    }
+    $(function () {
+        initCustSheet();
+    });
+    $('#save-cust').on('click', function () {
+        var custData = $('#cust-sheet').jexcel('getData', false);
+        console.log(custData);
+        $.ajax({
+            type: "POST",
+            url: "/Para?handler=CustBatchUpsert",
+            //beforeSend: function (xhr) {
+            //    //xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
+            //    xhr.setRequestHeader("XSRF-TOKEN", $('input:hidden[name="__RequestVerificationToken"]').val());
+            //},
+            @*headers:
+{
+    "RequestVerificationToken": '@GetAntiXsrfRequestToken()'
+},*@
+            data: JSON.stringify(custData),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    });
+</script>
+<style type="text/css">
+    .body-content {
+        width: 100%;
+    }
+</style>
