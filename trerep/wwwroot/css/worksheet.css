@@ -6,7 +6,8 @@
     margin: 0;
 }
 .tabs-bottom>.nav-tabs>li#pager{
-    float: right;
+    position: absolute;
+    right: 0;
 }
 .tabs-bottom > .nav-tabs > li#pager > .pagination{
     margin: 5px 10px 0 0;

@@ -47,3 +47,67 @@ ALTER TABLE public.fxtran
     OWNER to postgres;
 COMMENT ON TABLE public.fxtran
     IS 'giao dich fx';
+
+-- comments
+COMMENT ON COLUMN public.fxtran.ngaygd
+    IS 'ngay giao dich';
+
+COMMENT ON COLUMN public.fxtran.ngaygt
+    IS 'ngay gia tri';
+
+COMMENT ON COLUMN public.fxtran.cnthien
+    IS 'chi nhanh thuc hien';
+
+COMMENT ON COLUMN public.fxtran.ntegd
+    IS 'ngoai te giao dich';
+
+COMMENT ON COLUMN public.fxtran.slmua
+    IS 'so luong mua';
+
+COMMENT ON COLUMN public.fxtran.tgmua
+    IS 'ty gia mua';
+
+COMMENT ON COLUMN public.fxtran.slban
+    IS 'so luong ban';
+
+COMMENT ON COLUMN public.fxtran.tgban
+    IS 'ty gia ban';
+
+COMMENT ON COLUMN public.fxtran.mdnb
+    IS 'muc dich/ nguon ban';
+
+COMMENT ON COLUMN public.fxtran.gchu
+    IS 'ghi chu';
+
+COMMENT ON COLUMN public.fxtran.dtien2
+    IS 'dong tien 2';
+
+COMMENT ON COLUMN public.fxtran.kluqd
+    IS 'khoi luong usd quy doi';
+
+COMMENT ON COLUMN public.fxtran.kluqdm
+    IS 'khoi luong usd quy doi mua';
+
+COMMENT ON COLUMN public.fxtran.kluqdb
+    IS 'khoi luong usd quy doi ban';
+
+COMMENT ON COLUMN public.fxtran.tgdu
+    IS 'ty gia doi ung';
+
+COMMENT ON COLUMN public.fxtran.ln2
+    IS 'loi nhuan theo dong tien 2';
+
+COMMENT ON COLUMN public.fxtran.lnqv
+    IS 'loi nhuan quy vnd';
+
+COMMENT ON COLUMN public.fxtran.mdnb2
+    IS 'muc dich/ nguon ban 2';
+
+COMMENT ON COLUMN public.fxtran.gchu2
+    IS 'ghi chu 2';
+
+COMMENT ON COLUMN public.fxtran.lhkt
+    IS 'loai hinh kinh te';
+
+COMMENT ON COLUMN public.fxtran.nnghe
+    IS 'nganh nghe';

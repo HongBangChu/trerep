@@ -4,11 +4,16 @@
     ViewData["Title"] = "Data";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+<link href="~/css/worksheet.css" rel="stylesheet" />
 <!-- tabs -->
 <div class="tabbable tabs-bottom">
     <div class="tab-content">
-        <div class="tab-pane active" id="cust">
+        <div class="tab-pane active" id="fx">
             <div class="jumbotron">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
                 <div class="jexcel-wrapper">
                     <div id="cust-sheet"></div>
                 </div>
@@ -38,7 +43,7 @@
     <!-- tab content -->
     <ul class="nav nav-tabs">
         <li class="active dropup">
-            <a href="#cust" data-toggle="tab" class="dropbtn">Customer</a>
+            <a href="#fx" data-toggle="tab" class="dropbtn">FX</a>
             <div class="dropup-content">
                 <a id="save-cust" href="#">Save</a>
             </div>
@@ -53,6 +58,7 @@
         </li>
         <li><a href="#services" data-toggle="tab">Services</a></li>
         <li><a href="#contact" data-toggle="tab">Contact</a></li>
+        <li id="pager"></li>
     </ul>
 
 </div>
@@ -135,9 +141,23 @@
             }
         });
     });
+
+    $('.tabs-bottom #pager').bootpag({
+        total: 50,
+        page: 1,
+        maxVisible: 10,
+        leaps: true,
+        firstLastUse: true,
+        first: '←',
+        last: '→',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function (event, num) {
+        $(".content4").html("Page " + num); // or some ajax content loading...
+    });
 </script>
-<style type="text/css">
-    .body-content {
-        width: 100%;
-    }
-</style>
