@@ -8,11 +8,16 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System.IO;
 using System.Data;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Linq;
+using System.Dynamic;
+using Newtonsoft.Json;
 
 namespace trerep.Pages
 {
     public class ParaModel : PageModel
     {
+        private const string jsonFormat = "{{\"rows\":{0},\"total\":{1}}}";
         private readonly IConfiguration _configuration;
         private string _connStr;
         public ParaModel(IConfiguration configuration)
@@ -60,7 +65,15 @@ namespace trerep.Pages
                 }
             }
         }
-
+        public static void AddProperty(ExpandoObject expando, string propertyName, object propertyValue)
+        {
+            // ExpandoObject supports IDictionary so we can extend it like this
+            var expandoDict = expando as IDictionary<string, object>;
+            if (expandoDict.ContainsKey(propertyName))
+                expandoDict[propertyName] = propertyValue;
+            else
+                expandoDict.Add(propertyName, propertyValue);
+        }
         public JsonResult OnGetCust()
         {
             using (var conn = new NpgsqlConnection(_connStr))
@@ -68,12 +81,21 @@ namespace trerep.Pages
                 conn.Open();
                 using (var cmd = new NpgsqlCommand("para.cust_get", conn))
                 {
+                    dynamic flexible = new ExpandoObject();
+                    foreach (var key in Request.Query.Keys) {
+                        string value = Request.Query[key].ToString();
+                        AddProperty(flexible, key, value);
+                    }
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, DBNull.Value);
-                    NpgsqlParameter outParam = new NpgsqlParameter("@o_json", NpgsqlTypes.NpgsqlDbType.Json) { Direction = ParameterDirection.Output };
-                    cmd.Parameters.Add(outParam);
+                    cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, JsonConvert.SerializeObject(flexible));
+                    Console.Write(JsonConvert.SerializeObject(flexible));
+                    NpgsqlParameter outRows = new NpgsqlParameter("@o_rows", NpgsqlTypes.NpgsqlDbType.Json) { Direction = ParameterDirection.Output };
+                    cmd.Parameters.Add(outRows);
+                    NpgsqlParameter outTotal = new NpgsqlParameter("@o_total", NpgsqlTypes.NpgsqlDbType.Integer) { Direction = ParameterDirection.Output };
+                    cmd.Parameters.Add(outTotal);
                     cmd.ExecuteNonQuery();
-                    return new JsonResult(outParam.Value);
+
+                    return new JsonResult(string.Format(jsonFormat, outRows.Value, outTotal.Value));
                 }
             }
         }
