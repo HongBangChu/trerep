@@ -6,58 +6,44 @@
 }
 <link href="~/css/worksheet.css" rel="stylesheet" />
 <!-- tabs -->
+<partial name="~/Pages/Shared/xxx.cshtml" />
 <div class="tabbable tabs-bottom">
     <div class="tab-content">
-        <div class="tab-pane active" id="fx">
-            <div class="jumbotron">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile">
-                    <label class="custom-file-label" for="customFile">Choose file</label>
+        <div class="tab-pane active" id="fxtran">
+            <form>
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <input type="text" class="form-control" id="month" placeholder="Tháng">
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <input type="text" class="form-control" id="year" placeholder="Năm">
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="validatedCustomFile" required>
+                            <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                            <div class="invalid-feedback">Example invalid custom file feedback</div>
+                        </div>
+                    </div>
                 </div>
+                <button type="submit" class="btn btn-sm btn-primary" id="import">Import</button>
+            </form>
+            <div class="jumbotron">
                 <div class="jexcel-wrapper">
-                    <div id="cust-sheet"></div>
+                    <div id="fxtran-sheet"></div>
                 </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="about">
-            <div class="jumbotron">
-                <h1>About Tab</h1>
-                <p>because they are the most important for an encyclopedia to have, as determined by the community of participating editors..</p>
-            </div>
-        </div>
-
-        <div class="tab-pane" id="services">
-            <div class="jumbotron">
-                <h1>Services Tab</h1>
-                <p>meant to identify articles which deserve editor attention because they are the most important for an encyclopedia to have.</p>
-            </div>
-        </div>
-
-        <div class="tab-pane" id="contact">
-            <div class="jumbotron">
-                <h1>Contact Tab</h1>
-                <p>deserve editor attention because they are the most important for an encyclopedia to have, as determined by the community of participating editors..</p>
             </div>
         </div>
     </div>
     <!-- tab content -->
     <ul class="nav nav-tabs">
-        <li class="active dropup">
-            <a href="#fx" data-toggle="tab" class="dropbtn">FX</a>
+        <li class="nav-item dropup">
+            <a href="#fxtran" data-toggle="tab" class="nav-link active show dropbtn">FX Tran</a>
             <div class="dropup-content">
-                <a id="save-cust" href="#">Save</a>
+                <a id="save-fxtran" href="#">Save</a>
             </div>
         </li>
-        <li class="dropup">
-            <a class="dropbtn">Dropup</a>
-            <div class="dropup-content">
-                <a href="#">Link 1</a>
-                <a href="#">Link 2</a>
-                <a href="#">Link 3</a>
-            </div>
-        </li>
-        <li><a href="#services" data-toggle="tab">Services</a></li>
-        <li><a href="#contact" data-toggle="tab">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="#services" data-toggle="tab">Services</a></li>
         <li id="pager"></li>
     </ul>
 
@@ -82,43 +68,71 @@
             $(instance).data('cif', $(firstColumn).text());
     }
 
-    function initCustSheet() {
-        $('#cust-sheet').jexcel({
-            url: "/Para?handler=Cust",
-            csvHeaders: true,
-            tableOverflow: true,
-            tableHeight: '460px',
-            //data: response,
-            ondeleterow: deleteRow,
-            onselection: selectionActive,
-            colHeaders: ['CIF', 'Phân khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH'],
-            colWidths: [80, 80, 80, 300, 80, 80, 120, 250, 120, 80, 80, 80, 200],
-            columns: [
-                //{ type: 'autocomplete', url:'/jexcel/countries' },
-                //{ type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
-                //{ type: 'checkbox' },
-                //{ type: 'calendar' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-                { type: 'text' },
-            ]
+    function initCustSheet(page, take, initPagination) {
+        $.ajax({
+            type: 'GET'
+            , url: "/Para?handler=Cust"
+            , data: { page: page, take: take }
+            , success: function (res) {
+                var json = JSON.parse(res);
+                if (initPagination) {
+                    $('.tabs-bottom #pager').bootpag({
+                        total: Math.ceil(json.total/take),
+                        page: 1,
+                        maxVisible: 10,
+                        leaps: true,
+                        firstLastUse: true,
+                        first: '←',
+                        last: '→',
+                        wrapClass: 'pagination',
+                        activeClass: 'active',
+                        disabledClass: 'disabled',
+                        nextClass: 'next',
+                        prevClass: 'prev',
+                        lastClass: 'last',
+                        firstClass: 'first'
+                    }).on("page", function (event, num) {
+                        initCustSheet(num, take, false);
+                    });
+                }
+
+                $('#cust-sheet').jexcel({
+                    //url: "/Para?handler=Cust&page="+page+"&take="+take,
+                    csvHeaders: true,
+                    tableOverflow: true,
+                    tableHeight: '460px',
+                    data: json.rows,
+                    ondeleterow: deleteRow,
+                    onselection: selectionActive,
+                    colHeaders: ['CIF', 'P.khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH'],
+                    colWidths: [80, 60, 60, 300, 80, 60, 200, 250, 200, 80, 80, 80, 250],
+                    columns: [
+                        //{ type: 'autocomplete', url:'/jexcel/countries' },
+                        //{ type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
+                        //{ type: 'checkbox' },
+                        //{ type: 'calendar' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                    ]
+                });
+            }
         });
     }
     $(function () {
-        initCustSheet();
+        initCustSheet(1, 20, true);
     });
     $('#save-cust').on('click', function () {
         var custData = $('#cust-sheet').jexcel('getData', false);
-        console.log(custData);
         $.ajax({
             type: "POST",
             url: "/Para?handler=CustBatchUpsert",
@@ -140,24 +154,5 @@
                 alert(response);
             }
         });
-    });
-
-    $('.tabs-bottom #pager').bootpag({
-        total: 50,
-        page: 1,
-        maxVisible: 10,
-        leaps: true,
-        firstLastUse: true,
-        first: '←',
-        last: '→',
-        wrapClass: 'pagination',
-        activeClass: 'active',
-        disabledClass: 'disabled',
-        nextClass: 'next',
-        prevClass: 'prev',
-        lastClass: 'last',
-        firstClass: 'first'
-    }).on("page", function (event, num) {
-        $(".content4").html("Page " + num); // or some ajax content loading...
     });
 </script>

@@ -3,6 +3,7 @@ for details on configuring this project to bundle and minify static web assets. 
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-size: 0.8rem;
 }
 
 /* Wrapping element */
@@ -146,7 +147,7 @@ body {
         }
 
 /* Show the dropup menu on hover */
-.active.dropup:hover .dropup-content {
+.dropup:hover .dropup-content {
     display: block;
 }
 
@@ -204,4 +205,14 @@ ul .bootpag > li.active > a {
     color: #fff;
     background-color: #007bff;
     border-color: #007bff;
+}
+
+.form-control {
+    padding:.4rem .6rem;
+    font-size: .8rem;
+}
+
+.custom-file-label,
+.custom-file-label::after {
+    height: initial;
 }
