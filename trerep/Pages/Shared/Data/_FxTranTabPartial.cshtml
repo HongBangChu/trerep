@@ -1,0 +1,69 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="form-group col-sm-2">
+            <input type="text" class="form-control" id="month" placeholder="Tháng">
+        </div>
+        <div class="form-group col-sm-2">
+            <input type="text" class="form-control" id="year" placeholder="Năm">
+        </div>
+        <div class="col-sm-8">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="upload" required>
+                <label class="custom-file-label" for="upload">Choose file...</label>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-primary" id="import">Import</button>
+    <button asp-page-handler="Export" class="btn btn-sm btn-primary">Export</button>
+</form>
+<div class="jumbotron">
+    <div class="jexcel-wrapper">
+        <div id="fxtran-sheet"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#fxtran #import').on('click', function () {
+            var fileExtension = ['xls', 'xlsx'];
+            var filename = $('#upload').val();
+            if (filename.length == 0) {
+                alert("Please select a file.");
+                return false;
+            }
+            else {
+                var extension = filename.replace(/^.*\./, '');
+                if ($.inArray(extension, fileExtension) == -1) {
+                    alert("Please select only excel files.");
+                    return false;
+                }
+            }
+            var fdata = new FormData();
+            var fileUpload = $("#upload").get(0);
+            var files = fileUpload.files;
+            fdata.append(files[0].name, files[0]);
+            $.ajax({
+                type: "POST",
+                url: "/Data?handler=Import",
+                data: fdata,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.length == 0)
+                        alert('Some error occured while uploading');
+                    else {
+                        $('#dvData').html(response);
+                    }
+                },
+                error: function (e) {
+                    $('#dvData').html(e.responseText);
+                }
+            });
+        });
+    });
+</script>
