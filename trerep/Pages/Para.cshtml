@@ -137,14 +137,6 @@
         $.ajax({
             type: "POST",
             url: "/Para?handler=CustBatchUpsert",
-            //beforeSend: function (xhr) {
-            //    //xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
-            //    xhr.setRequestHeader("XSRF-TOKEN", $('input:hidden[name="__RequestVerificationToken"]').val());
-            //},
-            @*headers:
-{
-    "RequestVerificationToken": '@GetAntiXsrfRequestToken()'
-},*@
             data: JSON.stringify(custData),
             contentType: "application/json; charset=utf-8",
             dataType: "json",

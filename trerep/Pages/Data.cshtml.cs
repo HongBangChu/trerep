@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,17 +10,25 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Npgsql;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using trerep;
 
 namespace trerep.Pages
 {
     public class DataModel : PageModel
     {
         private IHostingEnvironment _hostingEnvironment;
-        public DataModel(IHostingEnvironment hostingEnvironment)
+        private readonly IConfiguration _configuration;
+        private string _connStr;
+        public DataModel(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
+            _configuration = configuration;
+            _connStr = _configuration.GetConnectionString("PostgresConnection");
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -29,6 +39,7 @@ namespace trerep.Pages
 
         public ActionResult OnPostImport()
         {
+            String result = "";
             IFormFile file = Request.Form.Files[0];
             string folderName = "Upload";
             string webRootPath = _hostingEnvironment.WebRootPath;
@@ -59,32 +70,47 @@ namespace trerep.Pages
                     }
                     IRow headerRow = sheet.GetRow(0); //Get Header Row
                     int cellCount = headerRow.LastCellNum;
-                    sb.Append("<table class='table'><tr>");
                     for (int j = 0; j < cellCount; j++)
                     {
                         NPOI.SS.UserModel.ICell cell = headerRow.GetCell(j);
                         if (cell == null || string.IsNullOrWhiteSpace(cell.ToString())) continue;
                         sb.Append("<th>" + cell.ToString() + "</th>");
                     }
-                    sb.Append("</tr>");
-                    sb.AppendLine("<tr>");
-                    for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++) //Read Excel File
+                    using (var conn = new NpgsqlConnection(_connStr))
                     {
-                        // importing row ...
-                        IRow row = sheet.GetRow(i);
-                        if (row == null) continue;
-                        if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
-                        for (int j = row.FirstCellNum; j < cellCount; j++)
+                        conn.Open();
+                        for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++) //Read Excel File
                         {
-                            if (row.GetCell(j) != null)
-                                sb.Append("<td>" + row.GetCell(j).ToString() + "</td>");
+                            // importing row ...
+                            IRow row = sheet.GetRow(i);
+                            if (row == null) continue;
+                            if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
+                            ExpandoObject para = new ExpandoObject();
+                            para.AddProperty("month", Request.Query["month"]);
+                            para.AddProperty("year", Request.Query["year"]);
+                            List<string> cells = new List<string>();
+                            for (int j = row.FirstCellNum; j < cellCount; j++)
+                            {
+                                if (row.GetCell(j) != null)
+                                {
+                                    cells.Add(row.GetCell(j).ToString());
+                                }
+                            }
+                            para.AddProperty("row", cells);
+                            using (var cmd = new NpgsqlCommand("data.fxtran_import_row", conn))
+                            {
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, JsonConvert.SerializeObject(para));
+                                NpgsqlParameter outParam = new NpgsqlParameter("@o_result", NpgsqlTypes.NpgsqlDbType.Json) { Direction = ParameterDirection.Output };
+                                cmd.Parameters.Add(outParam);
+                                cmd.ExecuteNonQuery();
+                                result += outParam.Value;
+                            }
                         }
-                        sb.AppendLine("</tr>");
                     }
-                    sb.Append("</table>");
                 }
             }
-            return this.Content(sb.ToString());
+            return new JsonResult(result);
         }
     }
 }

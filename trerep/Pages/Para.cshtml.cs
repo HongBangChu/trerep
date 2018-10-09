@@ -88,7 +88,7 @@ namespace trerep.Pages
                     }
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, JsonConvert.SerializeObject(flexible));
-                    Console.Write(JsonConvert.SerializeObject(flexible));
+                    
                     NpgsqlParameter outRows = new NpgsqlParameter("@o_rows", NpgsqlTypes.NpgsqlDbType.Json) { Direction = ParameterDirection.Output };
                     cmd.Parameters.Add(outRows);
                     NpgsqlParameter outTotal = new NpgsqlParameter("@o_total", NpgsqlTypes.NpgsqlDbType.Integer) { Direction = ParameterDirection.Output };

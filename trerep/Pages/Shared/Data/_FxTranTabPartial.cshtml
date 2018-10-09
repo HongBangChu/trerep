@@ -4,6 +4,7 @@
 @{
 }
 <form method="post" enctype="multipart/form-data">
+    <input type="file" id="fUpload" name="files" class="form-control" />
     <div class="row">
         <div class="form-group col-sm-2">
             <input type="text" class="form-control" id="month" placeholder="Tháng">
@@ -49,7 +50,7 @@
             fdata.append(files[0].name, files[0]);
             $.ajax({
                 type: "POST",
-                url: "/Data?handler=Import",
+                url: "/Shared/Import?handler=Import",
                 data: fdata,
                 contentType: false,
                 processData: false,
