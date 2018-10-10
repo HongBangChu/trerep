@@ -30,6 +30,12 @@
 
 <script type="text/javascript">
     $(function () {
+        $(':file').on('change', function () {
+            //get the file name
+            var fileName = $(this).val();
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        });
         $('#fxtran #import').on('click', function () {
             var fileExtension = ['xls', 'xlsx'];
             var filename = $('#upload').val();
@@ -50,19 +56,21 @@
             fdata.append(files[0].name, files[0]);
             $.ajax({
                 type: "POST",
-                url: "/Shared/Import?handler=Import",
+                url: "/Importer?handler=FxTran&month=" + $('#fxtran #month').val() + "&year=" + $('#fxtran #year').val(),
                 data: fdata,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    if (response.length == 0)
-                        alert('Some error occured while uploading');
-                    else {
-                        $('#dvData').html(response);
+                    response = JSON.parse(response);
+                    var tblRes = '<table class="table-hover">';
+                    for (var i = 0; i < response.length; i++) {
+                        tblRes += '<tr><td>' + response[i].tranid + '</td><td>' + response[i].result + '</td></tr>';
                     }
+                    tblRes += '</table>';
+                    showResult('Kết quả import', tblRes);
                 },
                 error: function (e) {
-                    $('#dvData').html(e.responseText);
+                    showResult('Kết quả import', e);
                 }
             });
         });

@@ -25,10 +25,14 @@ namespace trerep.Pages
         private IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _configuration;
         private string _connStr;
-        public DataModel(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        //public DataModel(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        //{
+        //    _configuration = configuration;
+        //    _connStr = _configuration.GetConnectionString("PostgresConnection");
+        //    _hostingEnvironment = hostingEnvironment;
+        //}
+        public DataModel(IHostingEnvironment hostingEnvironment)
         {
-            _configuration = configuration;
-            _connStr = _configuration.GetConnectionString("PostgresConnection");
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -76,38 +80,38 @@ namespace trerep.Pages
                         if (cell == null || string.IsNullOrWhiteSpace(cell.ToString())) continue;
                         sb.Append("<th>" + cell.ToString() + "</th>");
                     }
-                    using (var conn = new NpgsqlConnection(_connStr))
-                    {
-                        conn.Open();
-                        for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++) //Read Excel File
-                        {
-                            // importing row ...
-                            IRow row = sheet.GetRow(i);
-                            if (row == null) continue;
-                            if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
-                            ExpandoObject para = new ExpandoObject();
-                            para.AddProperty("month", Request.Query["month"]);
-                            para.AddProperty("year", Request.Query["year"]);
-                            List<string> cells = new List<string>();
-                            for (int j = row.FirstCellNum; j < cellCount; j++)
-                            {
-                                if (row.GetCell(j) != null)
-                                {
-                                    cells.Add(row.GetCell(j).ToString());
-                                }
-                            }
-                            para.AddProperty("row", cells);
-                            using (var cmd = new NpgsqlCommand("data.fxtran_import_row", conn))
-                            {
-                                cmd.CommandType = CommandType.StoredProcedure;
-                                cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, JsonConvert.SerializeObject(para));
-                                NpgsqlParameter outParam = new NpgsqlParameter("@o_result", NpgsqlTypes.NpgsqlDbType.Json) { Direction = ParameterDirection.Output };
-                                cmd.Parameters.Add(outParam);
-                                cmd.ExecuteNonQuery();
-                                result += outParam.Value;
-                            }
-                        }
-                    }
+                    //using (var conn = new NpgsqlConnection(_connStr))
+                    //{
+                    //    conn.Open();
+                    //    for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++) //Read Excel File
+                    //    {
+                    //        // importing row ...
+                    //        IRow row = sheet.GetRow(i);
+                    //        if (row == null) continue;
+                    //        if (row.Cells.All(d => d.CellType == CellType.Blank)) continue;
+                    //        ExpandoObject para = new ExpandoObject();
+                    //        para.AddProperty("month", Request.Query["month"]);
+                    //        para.AddProperty("year", Request.Query["year"]);
+                    //        List<string> cells = new List<string>();
+                    //        for (int j = row.FirstCellNum; j < cellCount; j++)
+                    //        {
+                    //            if (row.GetCell(j) != null)
+                    //            {
+                    //                cells.Add(row.GetCell(j).ToString());
+                    //            }
+                    //        }
+                    //        para.AddProperty("row", cells);
+                    //        using (var cmd = new NpgsqlCommand("data.fxtran_import_row", conn))
+                    //        {
+                    //            cmd.CommandType = CommandType.StoredProcedure;
+                    //            cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, JsonConvert.SerializeObject(para));
+                    //            NpgsqlParameter outParam = new NpgsqlParameter("@o_result", NpgsqlTypes.NpgsqlDbType.Json) { Direction = ParameterDirection.Output };
+                    //            cmd.Parameters.Add(outParam);
+                    //            cmd.ExecuteNonQuery();
+                    //            result += outParam.Value;
+                    //        }
+                    //    }
+                    //}
                 }
             }
             return new JsonResult(result);
