@@ -12,18 +12,14 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System.Dynamic;
 using Newtonsoft.Json;
+using trerep.Code;
 
 namespace trerep.Pages
 {
-    public class ParaModel : PageModel
+    public class ParaModel : BaseModel
     {
-        private const string jsonFormat = "{{\"rows\":{0},\"total\":{1}}}";
-        private readonly IConfiguration _configuration;
-        private string _connStr;
-        public ParaModel(IConfiguration configuration)
+        public ParaModel(IConfiguration configuration) : base(configuration)
         {
-            _configuration = configuration;
-            _connStr = _configuration.GetConnectionString("PostgresConnection");
         }
         public void OnGet()
         {

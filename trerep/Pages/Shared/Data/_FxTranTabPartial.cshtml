@@ -4,7 +4,6 @@
 @{
 }
 <form method="post" enctype="multipart/form-data">
-    <input type="file" id="fUpload" name="files" class="form-control" />
     <div class="row">
         <div class="form-group col-sm-2">
             <input type="text" class="form-control" id="month" placeholder="Tháng">
@@ -30,6 +29,7 @@
 
 <script type="text/javascript">
     $(function () {
+        initFxTranSheet(1, 20, true);
         $(':file').on('change', function () {
             //get the file name
             var fileName = $(this).val();
@@ -73,6 +73,77 @@
                     showResult('Kết quả import', e);
                 }
             });
+        });
+    });
+
+    var deleteRow = function (instance) {
+        $.ajax({
+            type: 'DELETE',
+            url: "/Data?handler=FxTran&cif=" + $(instance).data('tranid'),
+            success: function (response) {
+                alert(response);
+            }
+        });
+    }
+
+    function initFxTranSheet(page, take, initPagination) {
+        $.ajax({
+            type: 'GET'
+            , url: "/Data?handler=FxTran"
+            , data: { page: page, take: take }
+            , success: function (res) {
+                var json = JSON.parse(res);
+                if (initPagination) {
+                    var opt = bootpagOpt;
+                    opt.total = Math.ceil(json.total / take)
+                    $('.tabs-bottom #pager').bootpag(opt).on("page", function (event, num) {
+                        initFxTranSheet(num, take, false);
+                    });
+                }
+
+                $('#fxtran-sheet').jexcel({
+                    csvHeaders: true,
+                    tableOverflow: true,
+                    tableHeight: '460px',
+                    data: json.rows,
+                    ondeleterow: deleteRow,
+                    onselection: selectionActive,
+                    colHeaders: ['ID', 'Ngày GD', 'Ngày GT', 'BDS cha', 'CN thực hiện', 'GDV', 'KSV', 'CIF', 'Đối tác', 'Loại GD', 'Ngoại tệ GD', 'S.lượng mua', 'Tỷ giá mua', 'S.lượng bán', 'Tỷ giá bán'],
+                    colWidths: [80, 60, 60, 300, 80, 60, 200, 250, 200, 80, 80, 80, 250, 100, 100],
+                    columns: [
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                        { type: 'text' },
+                    ]
+                });
+            }
+        });
+    }
+    $('#save-fxtran').on('click', function () {
+        var saveData = $('#fxtran-sheet').jexcel('getData', false);
+        $.ajax({
+            type: "POST",
+            url: "/Dât?handler=FxTranBatchUpsert",
+            data: JSON.stringify(saveData),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                bootbox.alert(response);
+            },
+            failure: function (response) {
+                alert(response);
+            }
         });
     });
 </script>

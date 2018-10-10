@@ -22,7 +22,6 @@ begin
 		order by cif
 		limit i_take offset (i_page-1)*i_take
 	) tbl_arr;
-	insert into test values(i_page);
 end;
 
 $BODY$;

@@ -4,7 +4,7 @@
 
 CREATE TABLE public.fxtran
 (
-    id bigint NOT NULL,
+    tranid bigint NOT NULL,
     ngaygd date,
     ngaygt date,
     bdscha character varying(5),
@@ -36,7 +36,7 @@ CREATE TABLE public.fxtran
     nnghe character varying(200),
     thang smallint,
     nam integer,
-    CONSTRAINT fxtran_pkey PRIMARY KEY (id)
+    CONSTRAINT fxtran_pkey PRIMARY KEY (tranid)
 )
 WITH (
     OIDS = FALSE
@@ -48,7 +48,6 @@ ALTER TABLE public.fxtran
 COMMENT ON TABLE public.fxtran
     IS 'giao dich fx';
 
--- comments
 COMMENT ON COLUMN public.fxtran.ngaygd
     IS 'ngay giao dich';
 
