@@ -75,11 +75,17 @@
             });
         });
     });
+    var selectionActive = function (instance, firstColumn, lastColumn) {
+        // because sheet focus on to A1 before delete then blur after delete
+        if ($(firstColumn).prop('id') != $(lastColumn).prop('id'))
+            $(instance).data('tranid', $(firstColumn).text());
+    }
 
     var deleteRow = function (instance) {
+        console.log($(instance).data());
         $.ajax({
             type: 'DELETE',
-            url: "/Data?handler=FxTran&cif=" + $(instance).data('tranid'),
+            url: "/Data?handler=FxTran&tranid=" + $(instance).data('tranid'),
             success: function (response) {
                 alert(response);
             }
