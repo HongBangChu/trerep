@@ -216,3 +216,6 @@ ul .bootpag > li.active > a {
 .custom-file-label::after {
     height: initial;
 }
+a.dropdown-item{
+    font-size: 14px;
+}

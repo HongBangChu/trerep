@@ -1,6 +1,7 @@
 ﻿CREATE OR REPLACE FUNCTION data.fxtran_import_row(
 	p_params text,
 	OUT o_result json)
+    RETURNS json
     LANGUAGE 'plpgsql'
     COST 100.0
 
@@ -11,15 +12,19 @@ declare
     i_month integer;
     i_year integer;
     i_tranid integer;
+    i_cif integer;
 	json_result jsonb;
 begin
 	json_result := '{}';
 	i_tranid := 0;
-    i_month := to_number(p_params::json->>'month', '99');
-    i_year := to_number(p_params::json->>'year', '9999');
+    -- i_month := to_number(p_params::json->>'month', '99');
+    -- i_year := to_number(p_params::json->>'year', '9999');
     json_row := p_params::json->>'row';
+    i_month := to_number(to_char(to_date(json_row->>1, 'dd/mm/yyyy'), 'mm'), '99');
+    i_year := to_number(to_char(to_date(json_row->>1, 'dd/mm/yyyy'), 'yyyy'), '9999');
 	-- 0: stt, 7: id
     i_tranid := json_row->>7;
+    i_cif := to_number(json_row->>8, '9999999999');
 	INSERT INTO public.fxtran (
 		tranid
 		, ngaygd
@@ -49,7 +54,7 @@ begin
 		, json_row->>4
 		, json_row->>5
 		, json_row->>6
-		, to_number(json_row->>8, '9999999999')
+		, i_cif
 		, json_row->>9
 		, json_row->>10
 		, json_row->>11
@@ -70,7 +75,7 @@ begin
 		, cnthien=json_row->>4
 		, gdv=json_row->>5
 		, ksv=json_row->>6
-		, cif=to_number(json_row->>8, '9999999999')
+		, cif=i_cif
 		, doitac=json_row->>9
 		, loaigd=json_row->>10
 		, ntegd=json_row->>11
@@ -84,7 +89,7 @@ begin
 		, thang=i_month, nam=i_year
 	;
     select ('{"tranid":'||i_tranid||',"result":"success"}')::jsonb into json_result;
-    
+    perform report.fxreport_upsert(i_cif, i_month, i_year);
 	o_result := json_result::json;
 exception when others then
 	select ('{"tranid":'||i_tranid||',"result":"fail","detail":"'||sqlerrm||sqlstate||'"}')::jsonb into json_result;
