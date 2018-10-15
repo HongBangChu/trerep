@@ -1,0 +1,20 @@
+﻿@page
+@model trerep.Pages.Reports.CustByBDSModel
+@{
+    ViewData["Title"] = "CustByBDS";
+}
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="form-group col-sm-2">
+            <input type="text" class="form-control" id="month" placeholder="Tháng">
+        </div>
+        <div class="form-group col-sm-2">
+            <input type="text" class="form-control" id="year" placeholder="Năm">
+        </div>
+        <div class="col-sm-8">
+            <select class="form-control"></select>
+        </div>
+    </div>
+    <button asp-page-handler="Export" class="btn btn-sm btn-primary">Export</button>
+</form>
+

@@ -219,3 +219,6 @@ ul .bootpag > li.active > a {
 a.dropdown-item{
     font-size: 14px;
 }
+.body-content{
+    padding-top: 10px;
+}
