@@ -126,7 +126,7 @@ body {
 .dropup-content {
     display: none;
     position: absolute;
-    bottom: 40px;
+    bottom: 36px;
     background-color: #fff;
     min-width: 160px;
     box-shadow: 0px -4px 4px 0px rgba(0,0,0,0.2);

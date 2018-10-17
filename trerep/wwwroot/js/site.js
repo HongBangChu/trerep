@@ -18,3 +18,8 @@ var bootpagOpt = {
     lastClass: 'last',
     firstClass: 'first'
 };
+
+$(function () {
+    $('a.nav-link').parent().removeClass('active');
+    $('a.nav-link[href="' + window.location.pathname + '"]').parent().addClass('active')
+});
