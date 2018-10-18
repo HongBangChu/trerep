@@ -21,5 +21,7 @@ var bootpagOpt = {
 
 $(function () {
     $('a.nav-link').parent().removeClass('active');
-    $('a.nav-link[href="' + window.location.pathname + '"]').parent().addClass('active')
+    $('a.nav-link[href="' + window.location.pathname + '"]').parent().addClass('active');
+    // dropdown link
+    $('a.dropdown-item[href="' + window.location.pathname + '"]').parent().parent().addClass('active');
 });

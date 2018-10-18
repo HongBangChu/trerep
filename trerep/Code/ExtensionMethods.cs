@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace trerep
 {
@@ -16,6 +19,13 @@ namespace trerep
                 expandoDict[propertyName] = propertyValue;
             else
                 expandoDict.Add(propertyName, propertyValue);
+        }
+
+        public static string toJsonString(this string queryString)
+        {
+            var nvs = HttpUtility.ParseQueryString(queryString);
+            var dict = nvs.AllKeys.ToDictionary(k => k, k => nvs[k]);
+            return JsonConvert.SerializeObject(dict, new KeyValuePairConverter());
         }
     }
 }

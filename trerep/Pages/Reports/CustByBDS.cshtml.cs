@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Npgsql;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -26,11 +29,21 @@ namespace trerep.Pages.Reports
 
         public async Task<IActionResult> OnPostExport()
         {
-            string para;
+            string postData;
             using (var reader = new StreamReader(Request.Body))
             {
-                para = reader.ReadToEnd();
+                postData = reader.ReadToEnd();
             }
+            
+            //var json = new JavaScriptSerializer().Serialize(
+            //                    dict.AllKeys.ToDictionary(k => k, k => dict[k])
+            //           );
+            //ExpandoObject flexible = new ExpandoObject();
+            //foreach (var key in Request.Query.Keys)
+            //{
+            //    string value = Request.Query[key].ToString();
+            //    flexible.AddProperty(key, value);
+            //}
             string sWebRootFolder = _hostingEnvironment.WebRootPath;
             string sFileName = @"CustomerReport.xlsx";
             string URL = string.Format("{0}://{1}/{2}", Request.Scheme, Request.Host, sFileName);
@@ -85,14 +98,16 @@ namespace trerep.Pages.Reports
                 using (var conn = new NpgsqlConnection(_connStr))
                 {
                     conn.Open();
-                    using (var cmd = new NpgsqlCommand("para.cust_batch_upsert", conn))
+                    using (var cmd = new NpgsqlCommand("report.customer_get", conn))
                     {
                         NpgsqlTransaction tran = conn.BeginTransaction();
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, para);
-                        NpgsqlParameter outParam = new NpgsqlParameter("@o_rows", NpgsqlTypes.NpgsqlDbType.Refcursor) { Direction = ParameterDirection.Output };
-                        cmd.Parameters.Add(outParam);
-                        cmd.ExecuteNonQuery();
+                        cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, postData.toJsonString());
+                        //NpgsqlParameter outParam = new NpgsqlParameter("@o_rows", NpgsqlTypes.NpgsqlDbType.Refcursor) { Direction = ParameterDirection.Output };
+                        //cmd.Parameters.Add(outParam);
+                        //outParam = new NpgsqlParameter("@o_total", NpgsqlTypes.NpgsqlDbType.Integer) { Direction = ParameterDirection.Output };
+                        //cmd.Parameters.Add(outParam);
+                        //cmd.ExecuteNonQuery();
 
                         NpgsqlDataReader dr = cmd.ExecuteReader();
                         while (dr.Read())
