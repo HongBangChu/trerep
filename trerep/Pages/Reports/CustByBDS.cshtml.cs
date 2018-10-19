@@ -100,6 +100,13 @@ namespace trerep.Pages.Reports
                     conn.Open();
                     using (var cmd = new NpgsqlCommand("report.customer_get", conn))
                     {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, postData.toJsonString());
+                        var adapt = new NpgsqlDataAdapter();
+                        adapt.SelectCommand = cmd;
+                        var dataset = new DataSet();
+                        adapt.Fill(dataset);
+
                         NpgsqlTransaction tran = conn.BeginTransaction();
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@p_params", NpgsqlTypes.NpgsqlDbType.Text, postData.toJsonString());
@@ -113,6 +120,7 @@ namespace trerep.Pages.Reports
                         while (dr.Read())
                         {
                             // do what you want with data, convert this to json or...
+                            dr.GetString("cif");
                             excelSheet.CreateRow(9).CreateCell(0).SetCellValue(dr["cif"].ToString());
                         }
                         dr.Close();

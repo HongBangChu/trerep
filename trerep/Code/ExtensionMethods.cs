@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Npgsql;
 
 namespace trerep
 {
@@ -26,6 +27,13 @@ namespace trerep
             var nvs = HttpUtility.ParseQueryString(queryString);
             var dict = nvs.AllKeys.ToDictionary(k => k, k => nvs[k]);
             return JsonConvert.SerializeObject(dict, new KeyValuePairConverter());
+        }
+
+        public static string GetString(this NpgsqlDataReader source, string colname)
+        {
+            //if (string.IsNullOrEmpty(colname))
+            //    throw Exception("Need a column name");
+            return source.GetString(source.GetOrdinal(colname));
         }
     }
 }
