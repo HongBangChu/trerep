@@ -9,144 +9,28 @@
 <div class="tabbable tabs-bottom">
     <div class="tab-content">
         <div class="tab-pane active" id="cust">
+            <partial name="~/Pages/Shared/Para/_CustTabPartial.cshtml" />
+        </div>
+
+        <div class="tab-pane" id="brnare">
             <div class="jumbotron">
                 <div class="jexcel-wrapper">
-                    <div id="cust-sheet"></div>
+                    <div id="brnare-sheet"></div>
                 </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="about">
-            <div class="jumbotron">
-                <h1>About Tab</h1>
-                <p>because they are the most important for an encyclopedia to have, as determined by the community of participating editors..</p>
-            </div>
-        </div>
-
-        <div class="tab-pane" id="services">
-            <div class="jumbotron">
-                <h1>Services Tab</h1>
-                <p>meant to identify articles which deserve editor attention because they are the most important for an encyclopedia to have.</p>
-            </div>
-        </div>
-
-        <div class="tab-pane" id="contact">
-            <div class="jumbotron">
-                <h1>Contact Tab</h1>
-                <p>deserve editor attention because they are the most important for an encyclopedia to have, as determined by the community of participating editors..</p>
             </div>
         </div>
     </div>
     <!-- tab content -->
     <ul class="nav nav-tabs">
         <li class="nav-item dropup">
-            <a href="#cust" data-toggle="tab" class="nav-link active show dropbtn">Customer</a>
+            <a href="#cust" data-toggle="tab" class="nav-link active show dropbtn">Khách hàng</a>
             <div class="dropup-content">
                 <a id="save-cust" href="#">Save</a>
             </div>
         </li>
-        <li class="nav-item"><a class="nav-link" href="#services" data-toggle="tab">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="#brnare" data-toggle="tab">Chi nhánh theo địa bàn</a></li>
         <li id="pager"></li>
     </ul>
 
 </div>
 <!-- /tabs -->
-<script>
-    var deleteRow = function (instance) {
-        $.ajax({
-            type: 'DELETE',
-            url: "/Para?handler=Cust&cif=" + $(instance).data('cif'),
-            //beforeSend: function (xhr) {
-            //    xhr.setRequestHeader("RequestVerificationToken", $('input:hidden[name="__RequestVerificationToken"]').val());
-            //},
-            success: function (response) {
-                alert(response);
-            }
-        });
-    }
-
-    var selectionActive = function (instance, firstColumn, lastColumn) {
-        // because sheet focus on to A1 before delete then blur after delete
-        if ($(firstColumn).prop('id') != $(lastColumn).prop('id'))
-            $(instance).data('cif', $(firstColumn).text());
-    }
-    
-    function initCustSheet(page, take, initPagination) {
-        $.ajax({
-            type: 'GET'
-            , url: "/Para?handler=Cust"
-            , data: { page: page, take: take }
-            , success: function (res) {
-                var json = JSON.parse(res);
-                if (initPagination) {
-                    $('.tabs-bottom #pager').bootpag({
-                        total: Math.ceil(json.total/take),
-                        page: 1,
-                        maxVisible: 10,
-                        leaps: true,
-                        firstLastUse: true,
-                        first: '←',
-                        last: '→',
-                        wrapClass: 'pagination',
-                        activeClass: 'active',
-                        disabledClass: 'disabled',
-                        nextClass: 'next',
-                        prevClass: 'prev',
-                        lastClass: 'last',
-                        firstClass: 'first'
-                    }).on("page", function (event, num) {
-                        initCustSheet(num, take, false);
-                    });
-                }
-                
-                $('#cust-sheet').jexcel({
-                    //url: "/Para?handler=Cust&page="+page+"&take="+take,
-                    csvHeaders: true,
-                    tableOverflow: true,
-                    tableHeight: '460px',
-                    data: json.rows,
-                    ondeleterow: deleteRow,
-                    onselection: selectionActive,
-                    colHeaders: ['CIF', 'P.khúc KH', 'CFSIC8', 'Tên KH', 'CN mở CIF', 'XHTDNB', 'Ngành nghề kinh doanh', 'Địa chỉ', 'District', 'State', 'RM', 'Cán bộ QHKH'],
-                    colWidths: [80, 60, 60, 300, 80, 60, 200, 250, 200, 80, 80, 80, 250],
-                    columns: [
-                        //{ type: 'autocomplete', url:'/jexcel/countries' },
-                        //{ type: 'dropdown', source:[ {'id':'1', 'name':'Fruits'}, {'id':'2', 'name':'Legumes'}, {'id':'3', 'name':'General Food'} ] },
-                        //{ type: 'checkbox' },
-                        //{ type: 'calendar' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                    ]
-                });
-            }
-        });
-    }
-    $(function () {
-        initCustSheet(1, 20, true);
-    });
-    $('#save-cust').on('click', function () {
-        var custData = $('#cust-sheet').jexcel('getData', false);
-        $.ajax({
-            type: "POST",
-            url: "/Para?handler=CustBatchUpsert",
-            data: JSON.stringify(custData),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
-            },
-            failure: function (response) {
-                alert(response);
-            }
-        });
-    });
-</script>

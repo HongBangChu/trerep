@@ -16,4 +16,10 @@
     <PackageReference Include="npgsql" Version="4.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Pages\Shared\Para\_CustTabPartial.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>
