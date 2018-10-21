@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Pages\Shared\Para\_BrnAreTabPartial.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Pages\Shared\Para\_CustTabPartial.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
