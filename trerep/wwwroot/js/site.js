@@ -24,4 +24,9 @@ $(function () {
     $('a.nav-link[href="' + window.location.pathname + '"]').parent().addClass('active');
     // dropdown link
     $('a.dropdown-item[href="' + window.location.pathname + '"]').parent().parent().addClass('active');
+
+    $('.tabs-bottom a.nav-link').click(function () {
+        $('.tabs-bottom .nav-item').removeClass('active');
+        $(this).parent().addClass('active');
+    });
 });

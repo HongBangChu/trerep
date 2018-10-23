@@ -5,95 +5,123 @@
 </div>
 
 <script>
-    var deleteRow = function (instance) {
-        $.ajax({
-            type: 'DELETE',
-            url: "/Para?handler=BrnAre&cif=" + $(instance).data('bds'),
-            success: function (response) {
-                alert(response);
-            }
-        });
-    }
+    var Para = Para || {};
+    Para.BrnAre = (function () {
+        "use srict"
 
-    var selectionActive = function (instance, firstColumn, lastColumn) {
-        // because sheet focus on to A1 before delete then blur after delete
-        if ($(firstColumn).prop('id') != $(lastColumn).prop('id'))
-            $(instance).data('bds', $(firstColumn).text());
-    }
+        var controls = {};
 
-    function initBrnAreSheet(page, take, initPagination) {
-        $.ajax({
-            type: 'GET'
-            , url: "/Para?handler=BrnAre"
-            , data: { page: page, take: take }
-            , success: function (res) {
-                var json = JSON.parse(res);
-                if (initPagination) {
-                    $('.tabs-bottom #pager').bootpag({
-                        total: Math.ceil(json.total / take),
-                        page: 1,
-                        maxVisible: 10,
-                        leaps: true,
-                        firstLastUse: true,
-                        first: '←',
-                        last: '→',
-                        wrapClass: 'pagination',
-                        activeClass: 'active',
-                        disabledClass: 'disabled',
-                        nextClass: 'next',
-                        prevClass: 'prev',
-                        lastClass: 'last',
-                        firstClass: 'first'
-                    }).on("page", function (event, num) {
-                        initCustSheet(num, take, false);
+        var bindControls = function () {
+            var self = {};
+            self.sheet = $('#brnare-sheet');
+            self.saveBatch = $('#brnare-tab .save-batch');
+            self.pager = $('.tabs-bottom #pager');
+            return self;
+        };
+
+        var deleteRow = function (instance) {
+            $.ajax({
+                type: 'DELETE',
+                url: "/Para?handler=BrnAre&cif=" + $(instance).data('bds'),
+                success: function (response) {
+                    alert(response);
+                }
+            });
+        };
+
+        var selectionActive = function (instance, firstColumn, lastColumn) {
+            // because sheet focus on to A1 before delete then blur after delete
+            if ($(firstColumn).prop('id') != $(lastColumn).prop('id'))
+                $(instance).data('bds', $(firstColumn).text());
+        };
+
+        function initSheet(page, take, initPagination) {
+            $.ajax({
+                type: 'GET'
+                , url: "/Para?handler=BrnAre"
+                , data: { page: page, take: take }
+                , success: function (res) {
+                    var json = JSON.parse(res);
+                    if (initPagination) {
+                        controls.pager.bootpag({
+                            total: Math.ceil(json.total / take),
+                            page: 1,
+                            maxVisible: 10,
+                            leaps: true,
+                            firstLastUse: true,
+                            first: '←',
+                            last: '→',
+                            wrapClass: 'pagination',
+                            activeClass: 'active',
+                            disabledClass: 'disabled',
+                            nextClass: 'next',
+                            prevClass: 'prev',
+                            lastClass: 'last',
+                            firstClass: 'first'
+                        }).on("page", function (event, num) {
+                            initSheet(num, take, false);
+                        });
+                    }
+
+                    $('#cust-sheet').jexcel({
+                        csvHeaders: true,
+                        tableOverflow: true,
+                        tableHeight: '460px',
+                        data: json.rows,
+                        ondeleterow: deleteRow,
+                        onselection: selectionActive,
+                        colHeaders: ['BDS', 'Tên CN', 'Địa bàn', 'Tỉnh TP'],
+                        colWidths: [80, 60, 60, 300],
+                        columns: [
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                            { type: 'text' },
+                        ]
                     });
                 }
+            });
+        };
 
-                $('#cust-sheet').jexcel({
-                    //url: "/Para?handler=Cust&page="+page+"&take="+take,
-                    csvHeaders: true,
-                    tableOverflow: true,
-                    tableHeight: '460px',
-                    data: json.rows,
-                    ondeleterow: deleteRow,
-                    onselection: selectionActive,
-                    colHeaders: ['BDS', 'Tên CN', 'Địa bàn', 'Tỉnh TP'],
-                    colWidths: [80, 60, 60, 300],
-                    columns: [
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                        { type: 'text' },
-                    ]
+        var bindFunctions = function () {
+            controls.saveBatch.click(function () {
+                var batchData = controls.sheet.jexcel('getData', false);
+                $.ajax({
+                    type: "POST",
+                    url: "/Para?handler=BrnAreBatchUpsert",
+                    data: JSON.stringify(batchData),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
                 });
-            }
-        });
-    }
-    $(function () {
-        initBrnAreSheet(1, 20, true);
-    });
-    $('#save-brnare').on('click', function () {
-        var brnareData = $('#brnare-sheet').jexcel('getData', false);
-        $.ajax({
-            type: "POST",
-            url: "/Para?handler=BrnAreBatchUpsert",
-            data: JSON.stringify(brnareData),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
-            },
-            failure: function (response) {
-                alert(response);
-            }
-        });
-    });
+            })
+        };
+
+        var init = function () {
+            controls = bindControls();
+            bindFunctions();
+        };
+
+        var reloadSheet = function () {
+            initSheet(1, 20, true);
+        }
+
+        return {
+            init: init
+            , reloadSheet: reloadSheet
+        };
+    })();    
 </script>

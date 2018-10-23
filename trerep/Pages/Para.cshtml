@@ -18,15 +18,32 @@
     </div>
     <!-- tab content -->
     <ul class="nav nav-tabs">
-        <li class="nav-item dropup">
+        <li class="nav-item dropup" id="cust-tab">
             <a href="#cust" data-toggle="tab" class="nav-link active show dropbtn">Khách hàng</a>
             <div class="dropup-content">
                 <a id="save-cust" href="#">Save</a>
             </div>
         </li>
-        <li class="nav-item"><a class="nav-link" href="#brnare" data-toggle="tab">Chi nhánh theo địa bàn</a></li>
+        <li class="nav-item dropup" id="brnare-tab">
+            <a class="nav-link" href="#brnare" data-toggle="tab">Chi nhánh theo địa bàn</a>
+            <div class="dropup-content">
+                <a class="save-batch" href="#">Save</a>
+            </div>
+        </li>
         <li id="pager"></li>
     </ul>
 
 </div>
 <!-- /tabs -->
+<script>
+    $(function () {
+        //Para.BrnAre.init();
+    });
+    $('.tabs-bottom a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        //e.target // newly activated tab
+        //e.relatedTarget // previous active tab
+        if ($(this).parent().attr('id') == 'brnare-tab') {
+            Para.BrnAre.reloadSheet();
+        }
+    })
+</script>
