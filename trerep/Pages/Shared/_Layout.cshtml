@@ -35,9 +35,18 @@
                 <li class="nav-item">
                     <a class="nav-link" asp-page="/Data">Data</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="data" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Data
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="data">
+                        <a class="dropdown-item" asp-page="/Data">Obsolete data</a>
+                        <a class="dropdown-item" asp-page="/Data">Thanh toán quốc tế</a>
+                    </div>
+                </li>
                 @*<li class="nav-item">
-                    <a class="nav-link" asp-page="/Report">Report</a>
-                </li>*@
+            <a class="nav-link" asp-page="/Report">Report</a>
+        </li>*@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Reports
